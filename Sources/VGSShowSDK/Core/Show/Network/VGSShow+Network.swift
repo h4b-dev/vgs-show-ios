@@ -56,6 +56,10 @@ extension VGSShow {
 			switch requestResult {
 			case .success(let code, let data, let response):
 				// Log success response.
+                
+                if code == 200 {
+                    block(.success(code, data))
+                }
 
 				let responseFormat = VGSShowResponseDecodingFormat.json
 
