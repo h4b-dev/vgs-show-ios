@@ -153,7 +153,7 @@ extension VGSShow {
 		// Track success.
 		VGSAnalyticsClient.shared.trackFormEvent(self, type: .submit, status: .success, extraData: extraAnalyticsInfo)
 
-		block(.success(code, json))
+		block(.success(code))
 	}
 
 	/// Track error event.
