@@ -15,7 +15,7 @@ import Foundation
 	 - Parameters:
 		- code: `Int` object. Response status code.
 	*/
-	case success(_ code: Int)
+    case success(_ code: Int, _ data: [String: Any]?)
 
 	/**
 	 Failed response case.
