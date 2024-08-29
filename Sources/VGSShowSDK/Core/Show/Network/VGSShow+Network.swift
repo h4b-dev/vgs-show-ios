@@ -56,10 +56,6 @@ extension VGSShow {
 			switch requestResult {
 			case .success(let code, let data, let response):
 				// Log success response.
-                
-                if code == 200 {
-                    block(.success(code, data))
-                }
 
 				let responseFormat = VGSShowResponseDecodingFormat.json
 
@@ -101,7 +97,7 @@ extension VGSShow {
 			switch jsonDecodingResult {
 			case .success(let json):
 				// Reveal data.
-                revealDecodedResponse(json, code: code, revealModels: revealModels, extraAnalyticsInfo: extraAnalyticsInfo, data: data, completion: block)
+				revealDecodedResponse(json, code: code, revealModels: revealModels, extraAnalyticsInfo: extraAnalyticsInfo, completion: block)
 
 			case .failure(let error):
 				// Mark reveal request as failed with error - cannot decode response.
@@ -115,7 +111,7 @@ extension VGSShow {
 		}
 	}
 
-    private func revealDecodedResponse(_ json: VGSJSONData, code: Int, revealModels: [VGSViewModelProtocol], extraAnalyticsInfo: [String: Any] = [:], data: Data?, completion block: @escaping (VGSShowRequestResult) -> Void) {
+	private func revealDecodedResponse(_ json: VGSJSONData, code: Int, revealModels: [VGSViewModelProtocol], extraAnalyticsInfo: [String: Any] = [:], completion block: @escaping (VGSShowRequestResult) -> Void) {
 
 		var unrevealedContentPaths = [String]()
 		revealModels.forEach { model in
@@ -143,10 +139,10 @@ extension VGSShow {
 		}
 
 		// Handle unrevealed keys.
-        handleUnrevealedContentPaths(unrevealedContentPaths, code, data: data, completion: block)
+		handleUnrevealedContentPaths(json, unrevealedContentPaths, code, completion: block)
 	}
 
-    private func handleUnrevealedContentPaths(_ unrevealedContentPaths: [String], _ code: Int, extraAnalyticsInfo: [String: Any] = [:], data: Data?, completion block: @escaping (VGSShowRequestResult) -> Void) {
+	private func handleUnrevealedContentPaths(_ json: VGSJSONData, _ unrevealedContentPaths: [String], _ code: Int, extraAnalyticsInfo: [String: Any] = [:], completion block: @escaping (VGSShowRequestResult) -> Void) {
 
 		if !unrevealedContentPaths.isEmpty {
 			let warningMessage = "Cannot reveal data for contentPaths:\n\(VGSShow.formatDecodingContentPaths(unrevealedContentPaths))\n"
@@ -157,7 +153,7 @@ extension VGSShow {
 		// Track success.
 		VGSAnalyticsClient.shared.trackFormEvent(self, type: .submit, status: .success, extraData: extraAnalyticsInfo)
 
-		block(.success(code, data))
+		block(.success(code, json))
 	}
 
 	/// Track error event.
