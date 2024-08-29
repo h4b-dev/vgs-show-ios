@@ -16,7 +16,7 @@ import Foundation
 		- code: `Int` object. Response status code.
         - data: `VGSJSONData` object. Response data.
 	*/
-    case success(_ code: Int)
+    case success(_ code: Int, _ info: VGSJSONData?)
 
 	/**
 	 Failed response case.

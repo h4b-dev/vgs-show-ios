@@ -97,7 +97,7 @@ extension VGSShow {
 			switch jsonDecodingResult {
 			case .success(let json):
 				// Reveal data.
-				revealDecodedResponse(json, code: code, revealModels: revealModels, extraAnalyticsInfo: extraAnalyticsInfo, completion: block)
+                revealDecodedResponse(json: json, code: code, revealModels: revealModels, extraAnalyticsInfo: extraAnalyticsInfo, completion: block)
 
 			case .failure(let error):
 				// Mark reveal request as failed with error - cannot decode response.
@@ -111,7 +111,7 @@ extension VGSShow {
 		}
 	}
 
-	private func revealDecodedResponse(_ json: VGSJSONData, code: Int, revealModels: [VGSViewModelProtocol], extraAnalyticsInfo: [String: Any] = [:], completion block: @escaping (VGSShowRequestResult) -> Void) {
+	private func revealDecodedResponse(json: VGSJSONData, code: Int, revealModels: [VGSViewModelProtocol], extraAnalyticsInfo: [String: Any] = [:], completion block: @escaping (VGSShowRequestResult) -> Void) {
 
 		var unrevealedContentPaths = [String]()
 		revealModels.forEach { model in
@@ -153,7 +153,7 @@ extension VGSShow {
 		// Track success.
 		VGSAnalyticsClient.shared.trackFormEvent(self, type: .submit, status: .success, extraData: extraAnalyticsInfo)
 
-		block(.success(code))
+		block(.success(code, json))
 	}
 
 	/// Track error event.
